@@ -1,0 +1,62 @@
+clear all; clc; close all
+disp('Model Prediksi Kejadian Curah Hujan menggunakan Simulasi Monte Carlo tahun 2019 pada kota berikut.')
+disp('1. Balikpapan');
+disp('2. Barabai');
+disp('3. Banjarmasin');
+disp('4. Ketapang');
+disp('5. Kotabaru');
+disp('6. Malinau');
+disp('7. Palangkaraya');
+disp('8. Pangkalanbun');
+disp('9. Pontianak');
+disp('10. Purukcahu');
+disp('11. Samarinda');
+disp('12. Sendawar');
+disp('13. Sintang');
+disp('14. Tanjungselor');
+disp('15. Tarakan');
+f = input('Masukkan nomor kota : ');
+load kota; load nama_kota
+distname=kota.(nama_kota{f}).dist
+str='normal';
+    if contains(str,distname)
+        mcmc_normal
+%     else
+%         disp(distname)
+    end
+str='nakagami';
+    if contains(str,distname)
+        mcmc_nakagami
+%     else
+%         disp(distname)
+        
+    end
+str='gev';
+    if contains(str,distname)
+        mcmc_gev
+%     else
+%         disp(distname)
+    end
+ str='loglogistic';
+    if contains(str,distname)
+        mcmc_loglogistic
+%     else
+%         disp(distname)
+    end
+  str='loglogistic';
+    if contains(str,distname)
+        mcmc_loglogistic
+    end
+  str='rician';
+    if contains(str,distname)
+        mcmc_rician
+    end 
+  str='gamma';
+    if contains(str,distname)
+        mcmc_gamma
+    end 
+  str='lognormal';
+    if contains(str,distname)
+        mcmc_lognormal
+    end 
+%dist normal, nakagami, gev, loglogistic, weibul, rician, gamma
