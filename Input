@@ -20,43 +20,43 @@ load kota; load nama_kota
 distname=kota.(nama_kota{f}).dist
 str='normal';
     if contains(str,distname)
-        mcmc_normal
+        MCMC_Normal
 %     else
 %         disp(distname)
     end
 str='nakagami';
     if contains(str,distname)
-        mcmc_nakagami
+        MCMC_Nakagami
 %     else
 %         disp(distname)
         
     end
 str='gev';
     if contains(str,distname)
-        mcmc_gev
+        MCMC_GEV
 %     else
 %         disp(distname)
     end
  str='loglogistic';
     if contains(str,distname)
-        mcmc_loglogistic
+        MCMC_LogLogistic
 %     else
 %         disp(distname)
     end
   str='loglogistic';
     if contains(str,distname)
-        mcmc_loglogistic
+        MCMC_LogLogistic
     end
   str='rician';
     if contains(str,distname)
-        mcmc_rician
+        MCMC_Rician
     end 
   str='gamma';
     if contains(str,distname)
-        mcmc_gamma
+        MCMC_Gamma
     end 
   str='lognormal';
     if contains(str,distname)
-        mcmc_lognormal
+        MCMC_LogNormal
     end 
 %dist normal, nakagami, gev, loglogistic, weibul, rician, gamma
