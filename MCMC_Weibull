@@ -1,0 +1,192 @@
+namakota=nama_kota{f};
+TH=[];HR=[];HS=[];HL=[];HSL=[];data_all=[];
+    data=kota.(nama_kota{f}).data(1:216);
+    [A,B,C,D,E]=cat_ch(data);
+    TH=[TH,A];HR=[HR,B];HS=[HS,C];HL=[HL,D];HSL=[HSL,E];
+    clear('A','B','C','D','E');
+
+TH=struct('data',TH','distpro',[],'frek',size(TH,2),'fdk',[]);
+HR=struct('data',HR'','distpro',[],'frek',size(HR,2),'fdk',[]);
+HS=struct('data',HS','distpro',[],'frek',size(HS,2),'fdk',[]);
+HL=struct('data',HL','distpro',[],'frek',size(HL,2),'fdk',[]);
+HSL=struct('data',HSL','distpro',[],'frek',size(HSL,2),'fdk',[]);
+total_data=size(TH.data)+size(HR.data)+size(HS.data)+size(HL.data)+size(HSL.data);
+TH.fkp=size(TH.data)/total_data;
+HR.fkp=size(HR.data)/total_data;
+HS.fkp=size(HS.data)/total_data;
+HL.fkp=size(HL.data)/total_data;
+HSL.fkp=size(HSL.data)/total_data;
+fkp_all=[TH.fkp HR.fkp HS.fkp HL.fkp HSL.fkp];
+fkp_all=[fkp_all sum(fkp_all)];
+frek_all=[TH.frek HR.frek HS.frek HL.frek HSL.frek];
+frek_all=[frek_all sum(frek_all)];
+cat=["TH","HR","HS","HL","HSL","Jumlah"];
+cat=cat';fkp_all=fkp_all';frek_all=frek_all';
+
+fprintf('===============================')
+fprintf(' \n TABEL DISTRIBUSI PELUANG \n')
+fprintf('===============================')
+T=table(cat,frek_all,fkp_all)
+T.Properties.VariableNames = ["Kategori","Frekuensi","FKP"]
+
+str=['FKP Kota $s ',namakota];
+figure('Name',str);
+x=unique(data);
+pd=fitmethis(data);
+distname=pd(1).name;
+x=unique(data);
+param=pd(1).par;
+par1=param(1); par2=param(2);
+y=pdf(distname,x,par1,par2);
+plot(x,y,'LineWidth',1.5);
+hold on
+histogram(data,'Normalization','PDF','FaceColor','g');
+legend(distname);
+TH.fdk=TH.fkp;
+HR.fdk=HR.fkp+TH.fkp;
+HS.fdk=HR.fkp+TH.fkp+HS.fkp;
+HL.fdk=HR.fkp+TH.fkp+HS.fkp+HL.fkp;
+HSL.fdk=HR.fkp+TH.fkp+HS.fkp+HL.fkp+HSL.fkp;
+fdk_all=[TH.fdk HR.fdk HS.fdk HL.fdk HSL.fdk];
+cat=["TH","HR","HS","HL","HSL"];
+cat=cat';fdk_all=fdk_all';
+
+fprintf('===============================')
+fprintf(' \n FDK Kota %s \n',namakota)
+fprintf('===============================')
+tab=table(cat,fdk_all)
+tab.Properties.VariableNames = ["Kategori","FDK"]
+
+str=['FDK Kota %s',namakota];
+figure('Name',str);
+x=unique(data);
+fdk=kota.(nama_kota{f}).cdf(1:216);
+namedist=kota.(nama_kota{f}).dist;
+par1=kota.(nama_kota{f}).par(1);
+par2=kota.(nama_kota{f}).par(2);
+par3=kota.(nama_kota{f}).par(3);
+pd=makedist(namedist,par1,par2,par3);
+n=100000;
+rand_nums = abs(random(pd, 1, n));
+plot(x,fdk,'LineWidth',1.5);
+hold on
+histogram(data,'Normalization','CDF','FaceColor','m');
+
+TH_w=0;
+HR_w=1;
+HS_w=2;
+HL_w=3;
+HSL_w=4;
+
+str=['Random Numbers'];
+a=figure('Name',str);
+path='C:\Users\Evi Ardiyani\Documents\MATLAB\METKOM\plot\coba';
+histogram(rand_nums, 'Normalization', 'cdf')
+hold on
+plot(x, fdk, 'r', 'LineWidth', 1)
+hold on
+title(str);
+saveas(a,fullfile(path,[str,'.jpeg']));
+% TH=[TH,A];HR=[HR,B];HS=[HS,C];HL=[HL,D];HSL=[HSL,E];
+A=[];B=[];C=[];D=[];E=[];
+
+TH_w=0;
+HR_w=1;
+HS_w=2;
+HL_w=3;
+HSL_w=4;
+
+for i=1:size(rand_nums,2)
+    x=rand_nums(i);
+    if x==0
+       A=[A,x];
+    else if x>0&x<=20
+            B=[B,x];
+        else if x>20&x<=50
+                C=[C,x];
+            else if x>50&x<=100
+                    D=[D,x];
+                else if x>=100
+                        E=[E,x];
+                    end
+                end
+            end
+        end
+    end
+end
+
+frek_pred=[size(A,2) size(B,2) size(C,2) size(D,2) size(E,2)];
+
+tidakhujan=size(A,2);
+hujanringan=size(B,2);
+hujansedang=size(C,2);
+hujanlebat=size(D,2);
+hujansangatlebat=size(E,2);
+
+prob_tidakhujan=tidakhujan/n;
+prob_hujanringan=hujanringan/n;
+prob_hujansedang=hujansedang/n;
+prob_hujanlebat=hujanlebat/n;
+prob_hujansangatlebat=hujansangatlebat/n;
+
+% prob_tidakhujan+prob_hujandingan+prob_hujansedang+prob_hujanlebat+prob_hujansangatlebat
+data_2019=kota.(nama_kota{f}).data(217:228);
+clear ('A','B','C','D','E')
+A=[];B=[];C=[];D=[];E=[];
+
+for i=1:size(data_2019,1)
+    x=data_2019(i);
+    if x==0
+       A=[A,x];
+    else if x>0&x<=20
+            B=[B,x];
+        else if x>20&x<=50
+                C=[C,x];
+            else if x>50&x<=100
+                    D=[D,x];
+                else if x>=100
+                        E=[E,x];
+                    end
+                end
+            end
+        end
+    end
+end
+
+tidakhujan_19=size(A,2);
+hujanringan_19=size(B,2);
+hujansedang_19=size(C,2);
+hujanlebat_19=size(D,2);
+hujansangatlebat_19=size(E,2);
+
+prob_tidakhujan_19=tidakhujan_19/12;
+prob_hujanringan_19=hujanringan_19/12;
+prob_hujansedang_19=hujansedang_19/12;
+prob_hujanlebat_19=hujanlebat_19/12;
+prob_hujansangatlebat_19=hujansangatlebat_19/12;
+
+prob_all=[prob_tidakhujan prob_hujanringan prob_hujansedang prob_hujanlebat prob_hujansangatlebat];
+prob_all=[prob_all sum(prob_all)];
+
+prob_all_19=[prob_tidakhujan_19 prob_hujanringan_19 prob_hujansedang_19 prob_hujanlebat_19 prob_hujansangatlebat_19];
+prob_all_19=[prob_all_19 sum(prob_all_19)];
+
+cat=["TH","HR","HS","HL","HSL","Jumlah"];
+cat=cat';prob_all=prob_all';prob_all_19=prob_all_19';
+
+fprintf('===============================')
+fprintf(' \n Probabilitas kejadian hujan Kota %s \n',namakota)
+fprintf('===============================')
+tab=table(cat,prob_all,prob_all_19)
+tab.Properties.VariableNames = ["Kategori","Prediksi","2019"]
+
+Kategori=["Tidak Hujan" "Ringan" "Sedang" "Lebat" "Sangat Lebat"];
+summary=[];
+summary(1,1)="Pred";
+summary(1,2)="2019";
+for i=2:6
+    summary(i,1)=prob_all(i-1);
+    summary(i,2)=prob_all_19(i-1);
+end
+Rsq = 1 - sum((prob_all_19 - prob_all).^2)/sum((prob_all_19 - mean(prob_all_19)).^2);
+fprintf("Nilai RSquare = %f",Rsq);
